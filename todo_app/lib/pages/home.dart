@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/utili/dialog_box.dart';
 import 'package:todo_app/utili/todo_list.dart';
+import 'package:todo_app/goog_sh.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +13,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 // text controller
   final _controller = TextEditingController();
+  final _googleSheetsHelper = GoogleSheetsHelper();
 
   //list of todotasks
   List todotask = [
@@ -26,7 +28,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   //save new task
-  void saveNewTask() {
+  void saveNewTask() async {
+    await _googleSheetsHelper.addTask(_controller.text);
     setState(() {
       todotask.add([_controller.text, false]);
       _controller.clear();
@@ -49,7 +52,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   // delete task
-  void deleteTask(int index) {
+  void deleteTask(int index) async {
+    await _googleSheetsHelper.deleteTask(index);
+
     setState(() {
       todotask.removeAt(index);
     });
